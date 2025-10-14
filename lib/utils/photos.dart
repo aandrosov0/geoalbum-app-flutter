@@ -12,8 +12,8 @@ Future<List<Directory>?> getPhotosDirectories() async {
   } else if (SupportingPlatform.isAndroid) {
     var isGranted = await Permission.photos.request().isGranted;
     if (isGranted) {
-      final pictures = new Directory('/storage/sdcard0/Pictures');
-      final dcim = new Directory('/storage/sdcard0/DCIM');
+      final pictures = Directory('/storage/sdcard0/Pictures');
+      final dcim = Directory('/storage/sdcard0/DCIM');
       return [pictures, dcim];
     }
 

@@ -51,7 +51,6 @@ class _PhotosMapScreenState extends State<PhotosMapScreen> {
     final initialCenter =
         _arguments!.initialLocation ?? const LatLng(54.32, 48.38);
       
-    print(initialCenter);
     final mapOptions = MapOptions(
       initialCenter: initialCenter,
       initialZoom: _initialZoom,
