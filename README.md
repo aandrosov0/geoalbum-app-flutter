@@ -15,18 +15,18 @@
 ### Экран галерии
 Стартовый экран, на котором располагаются все доступные приложению изображения в формате png, jpg. Плавающая кнопка в правом нижнем углу позволяет открыть карту, а нажатие по изображению - экран просмотра фотографии.
 
-<img src="https://github.com/user-attachments/assets/c9702a3c-31d3-4e58-b768-3607f6fad1c5" width="450"/>
+<img src="https://github.com/user-attachments/assets/c9702a3c-31d3-4e58-b768-3607f6fad1c5" width="450"  />
 
 ### Экран просмотра фотограции
 На данном экране можно посмотреть изображение в высоком качестве без сжатий и найти его на карте при помощи плавающей кнопки.
 
-<img src="https://github.com/user-attachments/assets/4e00c550-f1b8-4b96-9df1-b903e124b176" width="450"/>
+<img src="https://github.com/user-attachments/assets/4e00c550-f1b8-4b96-9df1-b903e124b176" width="450" />
 
 Если геометка не обнаружена, то сверху будет находиться баннер, уведомляющий пользователя об этом.
 
-<img src="https://github.com/user-attachments/assets/e7cff0cb-8e4d-4816-be9b-a5b40062bcd3" width="450"/>
+<img src="https://github.com/user-attachments/assets/cd886003-dd93-493c-aed8-3996e5bec39a" width="450" />
 
 ### Экран карты
 Экран позволяет посмотреть фотки с геометкой на карте и перейти к просмотру отдельного изображения. Справа снизу присутствуют кнопки для упрощенный навигации.
 
-<img src="https://github.com/user-attachments/assets/8caff740-c214-4aeb-8a38-f54df8281f79" width="450"/>
+<img src="https://github.com/user-attachments/assets/8caff740-c214-4aeb-8a38-f54df8281f79" width="450" />
