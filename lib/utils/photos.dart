@@ -2,11 +2,22 @@ import 'dart:io';
 import 'package:exif/exif.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:app/utils/supporting_platform.dart';
 
 Future<List<Directory>?> getPhotosDirectories() async {
   if (SupportingPlatform.isAurora) {
     return await getExternalStorageDirectories(type: StorageDirectory.pictures);
+  } else if (SupportingPlatform.isAndroid) {
+    var isGranted = await Permission.photos.request().isGranted;
+    if (isGranted) {
+      final pictures = new Directory('/storage/sdcard0/Pictures');
+      final dcim = new Directory('/storage/sdcard0/DCIM');
+      return [pictures, dcim];
+    }
+
+    return [];
   }
   throw Exception('Unsupported operating system');
 }
@@ -15,6 +26,7 @@ Future<List<String>> listAllPhotos() async {
   final photos = <String>[];
   final fileNameRegex = RegExp(r'^(.*.jpg)|(.*.png)$');
   final picturesDirs = await getPhotosDirectories();
+  print(picturesDirs);
 
   picturesDirs?.forEach((dir) {
     for (final file in dir.listSync(recursive: true)) {
