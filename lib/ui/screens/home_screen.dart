@@ -14,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static const (int, int) imageRenderingSize = (300, 300);
+
   late final NavigatorState _navigatorState;
   List<String> _photos = [];
 
@@ -40,10 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         itemBuilder:
             (_, index) => ClickableImage(
-              image: FileImage(File(_photos[index])),
+              image: FileImage(File(_photos[index]), scale: 0.1),
               onPressed: () {
                 _loadPhoto(_photos[index]);
               },
+              filterQuality: FilterQuality.low,
+              cacheHeight: imageRenderingSize.$2,
             ),
       ),
       floatingActionButton: FloatingActionButton(

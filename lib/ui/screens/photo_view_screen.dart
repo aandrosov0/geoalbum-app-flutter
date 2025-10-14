@@ -21,6 +21,8 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
 
   PhotoViewRoute? _arguments;
 
+  File? _photo;
+
   bool _isLoading = true;
 
   @override
@@ -35,6 +37,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
     super.didChangeDependencies();
 
     _arguments = ModalRoute.settingsOf(context)!.arguments as PhotoViewRoute;
+    _photo = File(_arguments!.photoPath);
     _loadLocation();
   }
 
@@ -46,11 +49,11 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (_photoLocation == null)
-            Plank('Геометка отсутсвует.\nИзображения не будет на карте.'),
+            Plank('Геометка отсутствует.\nИзображения не будет на карте.'),
           Expanded(
             flex: 1,
             child: PhotoView(
-              imageProvider: FileImage(File(_arguments!.photoPath)),
+              imageProvider: FileImage(_photo!),
             ),
           ),
         ],
@@ -75,7 +78,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
 
   void _loadLocation() async {
     setState(() => _isLoading = true);
-    _photoLocation = await extractPhotoLocation(_arguments!.photoPath);
+    _photoLocation = await extractPhotoLocationFromFile(_photo!);
     setState(() => _isLoading = false);
   }
 }

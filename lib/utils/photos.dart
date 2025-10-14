@@ -26,7 +26,6 @@ Future<List<String>> listAllPhotos() async {
   final photos = <String>[];
   final fileNameRegex = RegExp(r'^(.*.jpg)|(.*.png)$');
   final picturesDirs = await getPhotosDirectories();
-  print(picturesDirs);
 
   picturesDirs?.forEach((dir) {
     for (final file in dir.listSync(recursive: true)) {
@@ -40,8 +39,8 @@ Future<List<String>> listAllPhotos() async {
   return photos;
 }
 
-Future<LatLng?> extractPhotoLocation(String path) async {
-  final fileBytes = File(path).readAsBytesSync();
+Future<LatLng?> extractPhotoLocationFromFile(File file) async {
+  final fileBytes = file.readAsBytesSync();
   final data = await readExifFromBytes(fileBytes);
 
   if (data.isEmpty) {
@@ -66,6 +65,10 @@ Future<LatLng?> extractPhotoLocation(String path) async {
   }
 
   return LatLng(latVal, lngVal);
+}
+
+Future<LatLng?> extractPhotoLocation(String path) async {
+  return await extractPhotoLocationFromFile(File(path));
 }
 
 double? _gpsValuesToFloat(IfdValues? values) {

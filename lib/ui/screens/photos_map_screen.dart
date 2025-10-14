@@ -16,6 +16,7 @@ class PhotosMapScreen extends StatefulWidget {
 }
 
 class _PhotosMapScreenState extends State<PhotosMapScreen> {
+  static const (int, int) imageRenderingSize = (60, 60);
   static const maxZoomIn = 20.0;
   static const maxZoomOut = 3.0;
 
@@ -49,9 +50,13 @@ class _PhotosMapScreenState extends State<PhotosMapScreen> {
   Widget build(BuildContext context) {
     final initialCenter =
         _arguments!.initialLocation ?? const LatLng(54.32, 48.38);
+      
+    print(initialCenter);
     final mapOptions = MapOptions(
       initialCenter: initialCenter,
       initialZoom: _initialZoom,
+      maxZoom: maxZoomIn,
+      minZoom: maxZoomOut
     );
 
     return Scaffold(
@@ -129,6 +134,9 @@ class _PhotosMapScreenState extends State<PhotosMapScreen> {
               onPressed: () {
                 _loadPhoto(photo);
               },
+              filterQuality: FilterQuality.low,
+              cacheWidth: imageRenderingSize.$1,
+              cacheHeight: imageRenderingSize.$2
             ),
           ),
         );
