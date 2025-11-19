@@ -76,6 +76,8 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
             scrimColor: Colors.black,
             gridInnerColor: Colors.red,
             gridCornerColor: Colors.amber,
+            dialogBackgroundColor: ColorScheme.of(context).surface,
+            showSourceImagePath: false,
             cropButtonText: const Text('Применить изменения'),
           ),
         ],
