@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app/ui/routes/routes.dart';
+import 'package:app/ui/widgets/image_deletion_dialog.dart';
 import 'package:app/ui/widgets/plank.dart';
 import 'package:app/utils/files.dart';
 import 'package:app/utils/photos.dart';
@@ -178,24 +179,13 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   void _showDeleteDialog() async {
     return showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-        title: const Text('Удаление'),
-        content: const Text('Вы действительно хотите удалить это изображение?'),
-        actions: [
-          TextButton(
-            onPressed: Navigator.of(context).pop,
-            child: const Text('Отменить'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _onDelete();
-            },
-            child: const Text('Подтвердить'),
-          ),
-        ],
-      ),
+      builder: (context) => ImageDeletionDialog(
+        onApply: () {
+          Navigator.of(context).pop();
+          _onDelete();
+        },
+        onCancel: Navigator.of(context).pop
+      )
     );
   }
 

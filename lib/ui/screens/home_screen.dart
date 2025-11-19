@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app/ui/widgets/image_deletion_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/utils/photos.dart';
@@ -40,15 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisExtent: 200,
           mainAxisSpacing: 10,
         ),
-        itemBuilder:
-            (_, index) => ClickableImage(
-              image: FileImage(File(_photos[index]), scale: 0.1),
-              onPressed: () {
-                _loadPhoto(_photos[index]);
-              },
-              filterQuality: FilterQuality.low,
-              cacheHeight: imageRenderingSize.$2,
-            ),
+        itemBuilder: (_, index) => _buildImage(_photos[index]),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openMap,
@@ -56,6 +49,31 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.map),
       ),
     );
+  }
+
+  Widget _buildImage(String path) {
+    return ClickableImage(
+      image: FileImage(File(path), scale: 0.1),
+      onPressed: () => _loadPhoto(path),
+      onLongPress: () =>
+          showDialog(
+              context: context, builder: (context) =>
+              ImageDeletionDialog(
+                onCancel: Navigator.of(context).pop,
+                onApply: () {
+                  Navigator.of(context).pop();
+                  _deleteImage(path);
+                },
+              )
+          ),
+      filterQuality: FilterQuality.low,
+      cacheHeight: imageRenderingSize.$2,
+    );
+  }
+
+  void _deleteImage(String path) async {
+    await File(path).delete();
+    setState(() { _loadPhotos(); });
   }
 
   void _loadPhotos() async {
