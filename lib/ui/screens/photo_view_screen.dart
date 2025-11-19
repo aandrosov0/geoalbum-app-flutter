@@ -113,28 +113,51 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
                     onTap: _showFileRenamingDialog,
                     child: const Text('Переименовать'),
                   ),
-                  PopupMenuItem(
-                    onTap: () => _cropImage(_photo?.path ?? ''),
-                    child: const Text('Редактировать'),
-                  ),
-                  PopupMenuItem(
-                    onTap: _onShare,
-                    child: const Text('Поделиться'),
-                  ),
                 ],
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Stack(
         children: [
-          if (_photoLocation == null)
-            Plank('Геометка отсутствует.\nИзображения не будет на карте.'),
-          Expanded(
-            flex: 1,
-            child: PhotoView(imageProvider: FileImage(_photo ?? File(''))),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (_photoLocation == null)
+                Plank('Геометка отсутствует.\nИзображения не будет на карте.'),
+              Expanded(
+                flex: 1,
+                child: PhotoView(imageProvider: FileImage(_photo ?? File(''))),
+              ),
+            ],
           ),
-        ],
+          Container(
+            padding: EdgeInsets.only(bottom: 18),
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                    onPressed: () => _cropImage(_photo?.path ?? ''),
+                    icon: const Icon(Icons.edit),
+                  color: Colors.white,
+                  padding: EdgeInsets.all(16),
+                ),
+                IconButton(
+                  onPressed: _showDeleteDialog,
+                  icon: const Icon(Icons.delete),
+                  color: Colors.white,
+                  padding: EdgeInsets.all(16),
+                ),
+                IconButton(
+                  onPressed: _onShare,
+                  icon: const Icon(Icons.share),
+                  color: Colors.white,
+                  padding: EdgeInsets.all(16),
+                ),
+              ],
+            ),
+          )
+        ]
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openMap,
@@ -143,6 +166,35 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : const Icon(Icons.map),
+      ),
+    );
+  }
+
+  void _onDelete() async {
+    _photo?.delete();
+    Navigator.of(context).pop();
+  }
+
+  void _showDeleteDialog() async {
+    return showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+        title: const Text('Удаление'),
+        content: const Text('Вы действительно хотите удалить это изображение?'),
+        actions: [
+          TextButton(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('Отменить'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _onDelete();
+            },
+            child: const Text('Подтвердить'),
+          ),
+        ],
       ),
     );
   }
