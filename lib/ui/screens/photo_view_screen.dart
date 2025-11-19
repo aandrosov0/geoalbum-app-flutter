@@ -1,12 +1,13 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:photo_view/photo_view.dart';
-
-import 'package:app/utils/photos.dart';
 import 'package:app/ui/routes/routes.dart';
 import 'package:app/ui/widgets/plank.dart';
+import 'package:app/utils/files.dart';
+import 'package:app/utils/photos.dart';
+import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:path/path.dart' as path;
+import 'package:photo_view/photo_view.dart';
 
 class PhotoViewScreen extends StatefulWidget {
   const PhotoViewScreen({super.key});
@@ -17,6 +18,8 @@ class PhotoViewScreen extends StatefulWidget {
 
 class _PhotoViewScreenState extends State<PhotoViewScreen> {
   late final NavigatorState _navigatorState;
+  late final TextEditingController _fileNameController;
+
   LatLng? _photoLocation;
 
   PhotoViewRoute? _arguments;
@@ -30,6 +33,14 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
     super.initState();
 
     _navigatorState = Navigator.of(context);
+    _fileNameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _fileNameController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -44,7 +55,20 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Просмотр изображения')),
+      appBar: AppBar(
+        title: const Text('Просмотр изображения'),
+        actions: [
+          PopupMenuButton(
+            itemBuilder:
+                (_) => [
+                  PopupMenuItem(
+                    onTap: _showFileRenamingDialog,
+                    child: const Text('Переименовать'),
+                  ),
+                ],
+          ),
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -52,9 +76,7 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
             Plank('Геометка отсутствует.\nИзображения не будет на карте.'),
           Expanded(
             flex: 1,
-            child: PhotoView(
-              imageProvider: FileImage(_photo!),
-            ),
+            child: PhotoView(imageProvider: FileImage(_photo!)),
           ),
         ],
       ),
@@ -80,5 +102,36 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
     setState(() => _isLoading = true);
     _photoLocation = await extractPhotoLocationFromFile(_photo!);
     setState(() => _isLoading = false);
+  }
+
+  void _onRenameFile() async {
+    final name = _fileNameController.text;
+    _photo = await _photo?.renameIgnoringExtension(name);
+  }
+
+  Future<void> _showFileRenamingDialog() {
+    _fileNameController.text = path.basenameWithoutExtension(_photo?.path ?? '');
+
+    return showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Изменение названия файла'),
+            content: TextField(controller: _fileNameController),
+            actions: [
+              TextButton(
+                onPressed: Navigator.of(context).pop,
+                child: const Text('Отменить'),
+              ),
+              TextButton(
+                onPressed: () {
+                  _onRenameFile();
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Подтвердить'),
+              ),
+            ],
+          ),
+    );
   }
 }

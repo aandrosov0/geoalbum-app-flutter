@@ -63,11 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _photos = photos);
   }
 
-  void _loadPhoto(String path) {
-    _navigatorState.pushNamed(
+  Future<void> _loadPhoto(String path) async {
+    await _navigatorState.pushNamed(
       '$PhotoViewRoute',
       arguments: PhotoViewRoute(photoPath: path),
     );
+
+    _loadPhotos();
   }
 
   void _openMap() {
