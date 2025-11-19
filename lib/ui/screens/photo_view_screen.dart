@@ -105,7 +105,8 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Просмотр изображения'),
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.transparent,
         actions: [
           PopupMenuButton(
             itemBuilder:
@@ -138,8 +139,8 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                    onPressed: () => _cropImage(_photo?.path ?? ''),
-                    icon: const Icon(Icons.edit),
+                  onPressed: () => _cropImage(_photo?.path ?? ''),
+                  icon: const Icon(Icons.edit),
                   color: Colors.white,
                   padding: EdgeInsets.all(16),
                 ),
@@ -157,8 +158,8 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
                 ),
               ],
             ),
-          )
-        ]
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openMap,
@@ -179,13 +180,14 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
   void _showDeleteDialog() async {
     return showDialog(
       context: context,
-      builder: (context) => ImageDeletionDialog(
-        onApply: () {
-          Navigator.of(context).pop();
-          _onDelete();
-        },
-        onCancel: Navigator.of(context).pop
-      )
+      builder:
+          (context) => ImageDeletionDialog(
+            onApply: () {
+              Navigator.of(context).pop();
+              _onDelete();
+            },
+            onCancel: Navigator.of(context).pop,
+          ),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:app/ui/widgets/image_deletion_dialog.dart';
 import 'package:flutter/material.dart';
@@ -30,10 +31,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = _buildAppBar();
+    final appBarHeight = appBar.preferredSize.height;
+    final viewPadding = MediaQuery.of(context).viewPadding;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Изображения')),
+      extendBodyBehindAppBar: true,
+      appBar: appBar,
       body: GridView.builder(
-        padding: const EdgeInsets.all(4),
+        padding: EdgeInsets.fromLTRB(4, appBarHeight + viewPadding.top, 4, 4),
         itemCount: _photos.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -55,25 +61,46 @@ class _HomeScreenState extends State<HomeScreen> {
     return ClickableImage(
       image: FileImage(File(path), scale: 0.1),
       onPressed: () => _loadPhoto(path),
-      onLongPress: () =>
-          showDialog(
-              context: context, builder: (context) =>
-              ImageDeletionDialog(
-                onCancel: Navigator.of(context).pop,
-                onApply: () {
-                  Navigator.of(context).pop();
-                  _deleteImage(path);
-                },
-              )
+      onLongPress:
+          () => showDialog(
+            context: context,
+            builder:
+                (context) => ImageDeletionDialog(
+                  onCancel: Navigator.of(context).pop,
+                  onApply: () {
+                    Navigator.of(context).pop();
+                    _deleteImage(path);
+                  },
+                ),
           ),
       filterQuality: FilterQuality.low,
       cacheHeight: imageRenderingSize.$2,
     );
   }
 
+  PreferredSizeWidget _buildAppBar() {
+    final colorScheme = ColorScheme.of(context);
+    PreferredSizeWidget appBar = AppBar(
+      title: Text('Изображения'),
+      backgroundColor: colorScheme.surface.withAlpha(200),
+    );
+
+    return PreferredSize(
+      preferredSize: appBar.preferredSize,
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: appBar,
+        ),
+      ),
+    );
+  }
+
   void _deleteImage(String path) async {
     await File(path).delete();
-    setState(() { _loadPhotos(); });
+    setState(() {
+      _loadPhotos();
+    });
   }
 
   void _loadPhotos() async {

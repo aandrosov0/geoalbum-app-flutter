@@ -50,16 +50,26 @@ class _PhotosMapScreenState extends State<PhotosMapScreen> {
   Widget build(BuildContext context) {
     final initialCenter =
         _arguments!.initialLocation ?? const LatLng(54.32, 48.38);
-      
+
     final mapOptions = MapOptions(
       initialCenter: initialCenter,
       initialZoom: _initialZoom,
       maxZoom: maxZoomIn,
-      minZoom: maxZoomOut
+      minZoom: maxZoomOut,
     );
 
+    final colorScheme = ColorScheme.of(context);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Метки на карте')),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text(
+          'Метки на карте',
+          style: TextStyle(color: colorScheme.surface),
+        ),
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(color: colorScheme.surface),
+      ),
       body: FlutterMap(
         mapController: _mapController,
         options: mapOptions,
@@ -135,7 +145,7 @@ class _PhotosMapScreenState extends State<PhotosMapScreen> {
               },
               filterQuality: FilterQuality.low,
               cacheWidth: imageRenderingSize.$1,
-              cacheHeight: imageRenderingSize.$2
+              cacheHeight: imageRenderingSize.$2,
             ),
           ),
         );
