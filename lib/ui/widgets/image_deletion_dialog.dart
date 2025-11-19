@@ -12,14 +12,8 @@ class ImageDeletionDialog extends StatelessWidget {
       title: const Text('Удаление'),
       content: const Text('Вы действительно хотите удалить это изображение?'),
       actions: [
-        TextButton(
-          onPressed: onCancel,
-          child: const Text('Отменить'),
-        ),
-        TextButton(
-          onPressed: onApply,
-          child: const Text('Подтвердить'),
-        ),
+        TextButton(onPressed: onCancel, child: const Text('Отменить')),
+        TextButton(onPressed: onApply, child: const Text('Подтвердить')),
       ],
     );
   }

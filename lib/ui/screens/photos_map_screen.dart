@@ -16,7 +16,7 @@ class PhotosMapScreen extends StatefulWidget {
 }
 
 class _PhotosMapScreenState extends State<PhotosMapScreen> {
-  static const (int, int) imageRenderingSize = (60, 60);
+  static const (int, int) imageRenderingSize = (80, 80);
   static const maxZoomIn = 20.0;
   static const maxZoomOut = 3.0;
 
@@ -137,16 +137,28 @@ class _PhotosMapScreenState extends State<PhotosMapScreen> {
       if (location != null) {
         markers.add(
           Marker(
+            width: 45,
+            height: 45,
             point: location,
-            child: ClickableImage(
-              image: FileImage(File(photo)),
-              onPressed: () {
-                _loadPhoto(photo);
-              },
-              filterQuality: FilterQuality.low,
-              cacheWidth: imageRenderingSize.$1,
-              cacheHeight: imageRenderingSize.$2,
-            ),
+            child: GestureDetector(
+              onTap: () => _loadPhoto(photo),
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: ClickableImage(
+                  image: FileImage(File(photo)),
+                  onPressed: () {
+                    _loadPhoto(photo);
+                  },
+                  filterQuality: FilterQuality.low,
+                  cacheWidth: imageRenderingSize.$1,
+                  cacheHeight: imageRenderingSize.$2,
+                ),
+              ),
+            )
           ),
         );
       }
