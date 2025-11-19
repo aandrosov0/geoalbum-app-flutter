@@ -10,6 +10,7 @@ import 'package:image_cropper_aurora/image_cropper_aurora.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart' as path;
 import 'package:photo_view/photo_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PhotoViewScreen extends StatefulWidget {
   const PhotoViewScreen({super.key});
@@ -164,7 +165,8 @@ class _PhotoViewScreenState extends State<PhotoViewScreen> {
 
   void _onShare() {
     final path = _photo?.path ?? '';
-    final uri = Uri.parse('file:$path');
+    final uri = Uri(scheme: 'file', path: path);
+    launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   Future<void> _showFileRenamingDialog() {
