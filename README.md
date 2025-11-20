@@ -26,9 +26,9 @@
 
 Если геометка не обнаружена, то сверху будет находиться баннер, уведомляющий пользователя об этом.
 
-<img src="https://github.com/user-attachments/assets/cd886003-dd93-493c-aed8-3996e5bec39a" width="450" />
+<img src="https://github.com/user-attachments/assets/009b1d46-d6ff-4a4f-944d-ab9577f0387e" width="450" />
 
 ### Экран карты
 Экран позволяет посмотреть фотки с геометкой на карте и перейти к просмотру отдельного изображения. Справа снизу присутствуют кнопки для упрощенный навигации.
 
-<img src="https://github.com/user-attachments/assets/8caff740-c214-4aeb-8a38-f54df8281f79" width="450" />
+<img src="https://github.com/user-attachments/assets/35623949-9f5d-4fa0-9a8b-af4122d9e97a" width="450" />
