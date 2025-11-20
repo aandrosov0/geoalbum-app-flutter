@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:ui';
 
+import 'package:app/ui/widgets/image_deletion_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/utils/photos.dart';
@@ -29,10 +31,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = _buildAppBar();
+    final appBarHeight = appBar.preferredSize.height;
+    final viewPadding = MediaQuery.of(context).viewPadding;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Изображения')),
+      extendBodyBehindAppBar: true,
+      appBar: appBar,
       body: GridView.builder(
-        padding: const EdgeInsets.all(4),
+        padding: EdgeInsets.fromLTRB(4, appBarHeight + viewPadding.top, 4, 4),
         itemCount: _photos.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -40,15 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisExtent: 200,
           mainAxisSpacing: 10,
         ),
-        itemBuilder:
-            (_, index) => ClickableImage(
-              image: FileImage(File(_photos[index]), scale: 0.1),
-              onPressed: () {
-                _loadPhoto(_photos[index]);
-              },
-              filterQuality: FilterQuality.low,
-              cacheHeight: imageRenderingSize.$2,
-            ),
+        itemBuilder: (_, index) => _buildImage(_photos[index]),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openMap,
@@ -58,16 +57,64 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildImage(String path) {
+    return ClickableImage(
+      image: FileImage(File(path), scale: 0.1),
+      onPressed: () => _loadPhoto(path),
+      onLongPress:
+          () => showDialog(
+            context: context,
+            builder:
+                (context) => ImageDeletionDialog(
+                  onCancel: Navigator.of(context).pop,
+                  onApply: () {
+                    Navigator.of(context).pop();
+                    _deleteImage(path);
+                  },
+                ),
+          ),
+      filterQuality: FilterQuality.low,
+      cacheHeight: imageRenderingSize.$2,
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    final colorScheme = ColorScheme.of(context);
+    PreferredSizeWidget appBar = AppBar(
+      title: Text('Изображения'),
+      backgroundColor: colorScheme.surface.withAlpha(200),
+    );
+
+    return PreferredSize(
+      preferredSize: appBar.preferredSize,
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: appBar,
+        ),
+      ),
+    );
+  }
+
+  void _deleteImage(String path) async {
+    await File(path).delete();
+    setState(() {
+      _loadPhotos();
+    });
+  }
+
   void _loadPhotos() async {
     final photos = await listAllPhotos();
     setState(() => _photos = photos);
   }
 
-  void _loadPhoto(String path) {
-    _navigatorState.pushNamed(
+  Future<void> _loadPhoto(String path) async {
+    await _navigatorState.pushNamed(
       '$PhotoViewRoute',
       arguments: PhotoViewRoute(photoPath: path),
     );
+
+    _loadPhotos();
   }
 
   void _openMap() {

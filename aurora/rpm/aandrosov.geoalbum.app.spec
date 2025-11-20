@@ -3,6 +3,10 @@
 %global __provides_exclude_from ^%{_datadir}/%{name}/lib/.*$
 %global __requires_exclude %{_flutter_excludes}
 
+%global __requires_exclude %{_flutter_excludes}
+BuildRequires: pkgconfig(runtime-manager-qt5)
+
+
 Name: %{orgName}.%{appName}%{?flavor}
 Summary: A new Flutter project.
 Version: 0.1.0

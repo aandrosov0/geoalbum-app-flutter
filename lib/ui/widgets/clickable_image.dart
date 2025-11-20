@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ClickableImage extends StatelessWidget {
   final ImageProvider image;
   final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
 
   final FilterQuality filterQuality;
 
@@ -13,6 +14,7 @@ class ClickableImage extends StatelessWidget {
     super.key,
     required this.image,
     this.onPressed,
+    this.onLongPress,
     this.filterQuality = FilterQuality.medium,
     this.cacheWidth,
     this.cacheHeight,
@@ -32,7 +34,7 @@ class ClickableImage extends StatelessWidget {
         Positioned.fill(
           child: Material(
             color: Colors.transparent,
-            child: InkWell(onTap: onPressed),
+            child: InkWell(onTap: onPressed, onLongPress: onLongPress),
           ),
         ),
       ],
